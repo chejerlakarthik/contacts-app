@@ -34,12 +34,10 @@ public class ContactsController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ContactsResponse getAllContacts()
 	{
-		ContactsResponse response = new ContactsResponse(contacts);
-		return response;
+		return new ContactsResponse(contacts);
 	}
 	
-	@GetMapping
-	@RequestMapping("/{name}")
+	@GetMapping(path = "/{name}")
 	public Contact getContact(@PathVariable String name)
 	{
 		Optional<Contact> mayBeContact = contacts.stream()
