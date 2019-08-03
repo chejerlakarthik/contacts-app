@@ -1,50 +1,47 @@
 package com.karthik.contacts.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.karthik.contacts.model.Contact;
 import com.karthik.contacts.model.ContactsResponse;
+import com.karthik.contacts.repository.ContactRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/contacts")
 public class ContactsController {
-	
-	private List<Contact> contacts = new ArrayList<>();
-	
+
+	private final ContactRepository contactRepository;
+
+	public ContactsController(ContactRepository contactRepository) {
+		this.contactRepository = contactRepository;
+	}
+
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Contact> addNewContact(@RequestBody Contact contactToAdd)
+	public Contact addNewContact(@RequestBody Contact contactToAdd)
 	{
 		Contact newContact = new Contact(contactToAdd.getName(), contactToAdd.getPersonalEmail());
-		contacts.add(newContact);
-		return contacts;
+		return contactRepository.insert(newContact);
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ContactsResponse getAllContacts()
 	{
+		List<Contact> contacts = contactRepository.findAll();
 		return new ContactsResponse(contacts);
 	}
 	
 	@GetMapping(path = "/{name}")
 	public Contact getContact(@PathVariable String name)
 	{
-		Optional<Contact> mayBeContact = contacts.stream()
-												 .filter(c -> c.getName().equalsIgnoreCase(name))
-												 .findFirst();
-		
-		return mayBeContact.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found"));
+		return Optional.ofNullable(contactRepository.findByName(name))
+								.orElseThrow(
+										() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found")
+								);
 	}
 
 
