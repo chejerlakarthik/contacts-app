@@ -2,3 +2,6 @@
 .project
 .settings
 target/
+/contacts-app.iml
+/.idea/
+/.env
