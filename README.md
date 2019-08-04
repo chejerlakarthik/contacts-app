@@ -1,6 +1,7 @@
-# contacts-app
-Contacts App using Spring Boot
-
-[![Build Status](https://travis-ci.com/chejerlakarthik/contacts-app.svg?branch=master)](https://travis-ci.com/chejerlakarthik/contacts-app)
-
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=chejerlakarthik_contacts-app)](https://sonarcloud.io/dashboard?id=chejerlakarthik_contacts-app)
+# Contacts App
+A simple contacts management app developed using 
+- Spring-boot
+- Mongo-DB
+  
+[![Build Status](https://travis-ci.com/chejerlakarthik/contacts-app.svg?branch=master)](https://travis-ci.com/chejerlakarthik/contacts-app) 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=chejerlakarthik_contacts-app&metric=alert_status)](https://sonarcloud.io/dashboard?id=chejerlakarthik_contacts-app)

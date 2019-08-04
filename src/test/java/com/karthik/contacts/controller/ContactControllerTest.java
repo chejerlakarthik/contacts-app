@@ -48,6 +48,7 @@ public class ContactControllerTest {
     public void testFindAllContactsIsSuccessful() {
         ContactsResponse allContacts = contactsController.getAllContacts();
         assertThat(allContacts.getContacts().size(), equalTo(1));
+        assertThat(allContacts.getCount(), equalTo(1));
     }
 
     @Test
