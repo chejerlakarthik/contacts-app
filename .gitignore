@@ -5,3 +5,4 @@ target/
 /contacts-app.iml
 /.idea/
 /.env
+run.sh

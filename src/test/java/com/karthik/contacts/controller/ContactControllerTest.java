@@ -33,19 +33,18 @@ public class ContactControllerTest {
     @BeforeEach
     public void setUp() {
         newContact = new Contact("karthik", "karthik@gmail.com");
-        when(contactRepository.insert(any(Contact.class))).thenReturn(newContact);
-        when(contactRepository.findAll()).thenReturn(Collections.singletonList(newContact));
-        when(contactRepository.findByName(anyString())).thenReturn(newContact);
     }
 
     @Test
     public void testAddingANewContactIsSuccessful() {
+        when(contactRepository.insert(any(Contact.class))).thenReturn(newContact);
         Contact addedContact = contactsController.addNewContact(newContact);
         assertThat(addedContact.getName(), equalTo("karthik"));
     }
 
     @Test
     public void testFindAllContactsIsSuccessful() {
+        when(contactRepository.findAll()).thenReturn(Collections.singletonList(newContact));
         ContactsResponse allContacts = contactsController.getAllContacts();
         assertThat(allContacts.getContacts().size(), equalTo(1));
         assertThat(allContacts.getCount(), equalTo(1));
@@ -53,6 +52,7 @@ public class ContactControllerTest {
 
     @Test
     public void testFindingAnExistingContactIsSuccessful() {
+        when(contactRepository.findByName(anyString())).thenReturn(newContact);
         Contact contactByName = contactsController.getContact("karthik");
         assertThat(contactByName.getName(), equalTo("karthik"));
         assertThat(contactByName.getPersonalEmail(), equalTo("karthik@gmail.com"));
