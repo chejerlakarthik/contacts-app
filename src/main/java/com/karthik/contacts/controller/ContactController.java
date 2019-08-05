@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/contacts")
@@ -38,11 +37,37 @@ public class ContactController {
 	@GetMapping(path = "/{name}")
 	public Contact getContact(@PathVariable String name)
 	{
-		return Optional.ofNullable(contactRepository.findByName(name))
+		return contactRepository.findByName(name)
 								.orElseThrow(
 										() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found")
 								);
 	}
 
+	@PutMapping(path = "/{name}")
+	public Contact updateContact(@PathVariable String name, @RequestBody Contact contactToUpdate)
+	{
+		return contactRepository.findByName(name)
+								.map(contact -> {
+									contact.setPersonalEmail(contactToUpdate.getPersonalEmail());
+									return contact;
+								})
+								.map(contactRepository::save)
+								.orElseThrow(
+									 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found")
+								);
+	}
+
+	@DeleteMapping
+	public void deleteAll()
+	{
+		contactRepository.deleteAll();
+	}
+
+	@DeleteMapping(path = "/{name}")
+	public void deleteContact(@PathVariable String name)
+	{
+		contactRepository.findByName(name)
+						 .ifPresent(contactRepository::delete);
+	}
 
 }
