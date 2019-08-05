@@ -1,6 +1,5 @@
 package com.karthik.contacts.model;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.data.annotation.Id;
 
 import java.util.Objects;
@@ -13,7 +12,7 @@ public class Contact {
 	private String name;
 	private String personalEmail;
 
-	public Contact() {};
+	public Contact() {}
 
 	public Contact(String name, String personalEmail) {
 		this.id = UUID.randomUUID().toString();
@@ -23,7 +22,7 @@ public class Contact {
 
 	public Contact(String id, String name, String personalEmail)
 	{
-		this.id = UUID.randomUUID().toString();
+		this.id = id;
 		this.name = name;
 		this.personalEmail = personalEmail;
 	}
@@ -38,11 +37,6 @@ public class Contact {
 
 	public String getPersonalEmail() {
 		return personalEmail;
-	}
-
-	public Contact withEmail(String email)
-	{
-		return new Contact(getId(), getName(), email);
 	}
 
 	public void setPersonalEmail(String personalEmail) {

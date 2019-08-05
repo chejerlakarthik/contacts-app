@@ -2,7 +2,6 @@ package com.karthik.contacts.controller;
 
 import com.karthik.contacts.model.Contact;
 import com.karthik.contacts.model.ContactsResponse;
-import com.karthik.contacts.model.Email;
 import com.karthik.contacts.repository.ContactRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
