@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/contacts")
+@RequestMapping("/api")
 public class ContactController {
 
 	private final ContactRepository contactRepository;
@@ -20,21 +20,24 @@ public class ContactController {
 		this.contactRepository = contactRepository;
 	}
 
-	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path = "/contacts",
+				 consumes = MediaType.APPLICATION_JSON_VALUE,
+				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public Contact addNewContact(@RequestBody Contact contactToAdd)
 	{
 		Contact newContact = new Contact(contactToAdd.getName(), contactToAdd.getPersonalEmail());
 		return contactRepository.insert(newContact);
 	}
 
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/contacts",
+				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ContactsResponse getAllContacts()
 	{
 		List<Contact> contacts = contactRepository.findAll();
 		return new ContactsResponse(contacts);
 	}
 	
-	@GetMapping(path = "/{name}")
+	@GetMapping(path = "/contacts/{name}")
 	public Contact getContact(@PathVariable String name)
 	{
 		return contactRepository.findByName(name)
@@ -43,7 +46,7 @@ public class ContactController {
 								);
 	}
 
-	@PutMapping(path = "/{name}")
+	@PutMapping(path = "/contacts/{name}")
 	public Contact updateContact(@PathVariable String name, @RequestBody Contact contactToUpdate)
 	{
 		return contactRepository.findByName(name)
@@ -57,13 +60,13 @@ public class ContactController {
 								);
 	}
 
-	@DeleteMapping
+	@DeleteMapping(path = "/contacts")
 	public void deleteAll()
 	{
 		contactRepository.deleteAll();
 	}
 
-	@DeleteMapping(path = "/{name}")
+	@DeleteMapping(path = "/contacts/{name}")
 	public void deleteContact(@PathVariable String name)
 	{
 		contactRepository.findByName(name)
