@@ -29,15 +29,15 @@ env:
   global:
     secure: iG6VRNo9Ka2Y4iPc9YsMSICoVDZQ8GAwE3vAXm7ojkOulay5FZLQtozYz/+TAcnPs30+zJyc8urMuy3fQo9CgaRMx6O2t7sV6qirOdwTNZyNToKNwILaLTPAh+z26PXMQPF13H4/EZmqPAkPyixuTr/r1aacX9Ud5Hj1HFZHlzCQ1oAk4LkNHCrzZUdDmct125kIWf3XQUQMHxMXnqUluKRkglq86L/Xj5Z1Nkvb5+CqaATvh1svobwfy7Rs5OCAVvbi4Q2s+lA0Gq4es5TfaUlXnUYNwMOqeJ1IMPJp4an8F0EliS1U7rsKsDlPaHjhD3107q+cHIosb+draC7BaDS4mBmdY4v5xgh8qb4UOkS/Lwy2f1GhxN8XEolXhS6pmRXyRWh0e9/ThngSl1E/Ugx3E8T/rlzr7SlCDNGjz5PgjPHTEE5ZEyQbbi64FPwfjR45/3lRON5335u4zG1MBzMW8vJOw/3TaVyDwOIypZwkNlDIa7oRo9igZ1viJnPPoGZrEQpd2U6G6iX8sdbEqwnwU7Yd9xoovrfn94LSsCpfC4Oxoh9gUNzJ05mC+DRnT84ILNaWJOiaOu28jHwRiwXtERUnjP2QoaKCrUZfHeZTzInI4H+hI2Mf/F8KjKv6mmdiydIOpXDm8VRURPcTzGxGIn4DFG8V3Mezhf9wDg4=
 
-deploy:
-  provider: elasticbeanstalk
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key:
-    secure: $AWS_SECRET
-  region: "ap-southeast-1"
-  app: "ContactsApi"
-  env: "Contactsapi-env"
-  bucket_name: "elasticbeanstalk-ap-southeast-1-035765131789"
-  bucket_path: "ContactsApi"
-  on:
-    branch: master
+#deploy:
+#  provider: elasticbeanstalk
+#  access_key_id: $AWS_ACCESS_KEY
+#  secret_access_key:
+#    secure: $AWS_SECRET
+#  region: "ap-southeast-1"
+#  app: "ContactsApi"
+#  env: "Contactsapi-env"
+#  bucket_name: "elasticbeanstalk-ap-southeast-1-035765131789"
+#  bucket_path: "ContactsApi"
+#  on:
+#    branch: master
