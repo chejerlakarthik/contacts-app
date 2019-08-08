@@ -22,7 +22,7 @@ after_success:
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH;
   fi`
 - export IMAGE_NAME=chejerlakarthik/contacts-app
-- docker build -t $IMAGE_NAME:$TAG ./
+- docker build -t $IMAGE_NAME:$TAG -f Dockerfile
 - docker push $IMAGE_NAME
 
 env:
@@ -31,12 +31,13 @@ env:
 
 deploy:
   provider: elasticbeanstalk
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key:
-    secure: $AWS_SECRET
+  skip_cleanup: true
   region: "ap-southeast-1"
   app: "ebs-contacts-app"
   env: "EbsContactsApp-env"
+  access_key_id: $AWS_ACCESS_KEY
+    secret_access_key:
+      secure: $AWS_SECRET
   bucket_name: "elasticbeanstalk-ap-southeast-1-035765131789"
   bucket_path: "ebs-contacts-app"
   on:
