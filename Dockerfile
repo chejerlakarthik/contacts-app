@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy the packaged Jar file
 COPY target/contacts-app-1.0.0-SNAPSHOT.jar contacts-app.jar
 
-# Expose port 8080 - more of an instruction to AWS EBS
-EXPOSE 8080
+# Expose port 80
+EXPOSE 80
 
 # Command to run inside the container to start the app
 CMD ["java", "-jar", "contacts-app.jar"]
