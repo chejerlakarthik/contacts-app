@@ -37,8 +37,8 @@ deploy:
   app: "ebs-contacts-app"
   env: "EbsContactsApp-env"
   access_key_id: $AWS_ACCESS_KEY
-    secret_access_key:
-      secure: $AWS_SECRET
+  secret_access_key:
+    secure: $AWS_SECRET
   bucket_name: "elasticbeanstalk-ap-southeast-1-035765131789"
   bucket_path: "ebs-contacts-app"
   on:
