@@ -43,3 +43,15 @@ deploy:
   bucket_path: "ebs-contacts-app"
   on:
     branch: master
+
+notifications:
+  email: false
+  slack:
+    rooms:
+      secure: C7QRJ6cMu5ZWr0rotlwHTtE5kXVw5vixnhp94ZdJuyc7UGT2AxTqLfsGIV2nVHcXt+Uyd4zKYdaHCCPrEM+TKeGwRkX+DWBsLOkpBN88Tb4P2KpTfdfZr7p7z7J+Jh6sDEeYT6A+V+kZpTMcuLUCN65cW20UGXZqgwjq7c8EAJeB16uqWoayxwT78Ln1nXkqGvbzWLp51lstXExaUEJQw753ci45/FMcF9cCr8KrWMjBHM4HOrymPATBeNe6TJtDUndpNmtUu/8/aNH8l06fVqpEnr1P3si2wJPxsF+ZzSLAnQwQZ5y7Jxupn1TCaEQty0d7zzNMhBCqfePlpWJEXBym2NNvl+5mrIx3K99ztx/AXRny3vvD/avSwZ35jM4eFzVd7M7eHykuNn5OIdkyWgsF+xHeu2O7CiqnIjCpmlEnNd92cZ6SSb6Y5y4URBzdqXJ+bLfYChRoDorl1aq8L6suPnfqZiqxg6n6Qpzp08gaOX/Vok/O1h5bfK87gFAz/9IJxU2uYMzxXy98DOvi7et0Teyz/affkM0QJQClNdF/z3AUVSec/0ISUqudDId0pAwZ1caxvAFVquNchKNiMGB+DPZMySrMBEDJEAKtAT2scsxOv7btm9CdtkZItfYgl6WZ0C+aAUdywqKwSqqIeieu/nHwXmJJulw6oj8sR2s=
+    on_success: always
+    on_failure: always
+    template:
+      - "Repo `%{repository_slug}` *%{result}* build (<%{build_url}|#%{build_number}>) for commit (<%{compare_url}|%{commit}>) on branch `%{branch}`."
+      - "Execution time: *%{duration}*"
+      - "Message: %{message}"
