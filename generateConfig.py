@@ -47,7 +47,7 @@ def zip_files(folders = ['target', '.ebextensions'], files = ['Dockerfile', 'Doc
                 zipper.write(file)
         for file in files:
             zipper.write(file)
-    print(f'Zipfile {zipFileName} created')
+    print('Zipfile ' + zipFileName + ' created')
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
