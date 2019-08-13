@@ -38,7 +38,7 @@ def get_all_file_paths(directory):
             # returning all file paths
     return file_paths
 
-def zip_files(folders = ['target', '.ebextensions'], files = ['Dockerfile', 'Dockerrun.aws.json'], zipFileName = 'aws_ebs_deployment_artifact.zip'):
+def zip_files(folders = ['target', '.ebextensions'], files = ['Dockerrun.aws.json'], zipFileName = 'aws_ebs_deployment_artifact.zip'):
     print('Zipping files now...')
     with zipfile.ZipFile(zipFileName, 'w') as zipper:
         # Add multiple files to the zip
