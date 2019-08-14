@@ -28,7 +28,7 @@ after_success:
   fi`
 - export IMAGE_NAME=chejerlakarthik/contacts-app
 - docker build -t $IMAGE_NAME:$TAG -f Dockerfile
-- docker push $IMAGE_NAME
+- docker push $IMAGE_NAME:$TAG
 
 env:
   global:
