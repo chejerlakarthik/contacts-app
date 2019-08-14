@@ -51,6 +51,7 @@ public class ContactController {
 	{
 		return contactRepository.findById(id)
 								.map(contact -> {
+									contact.setName(contactToUpdate.getName());
 									contact.setPersonalEmail(contactToUpdate.getPersonalEmail());
 									return contact;
 								})

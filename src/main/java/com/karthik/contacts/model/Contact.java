@@ -39,6 +39,10 @@ public class Contact {
 		return personalEmail;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public void setPersonalEmail(String personalEmail) {
 		this.personalEmail = personalEmail;
 	}
