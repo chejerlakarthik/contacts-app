@@ -45,13 +45,13 @@ deploy:
   skip_cleanup: true
   zip_file: $ZIPFILE_NAME
   region: "ap-southeast-1"
-  app: "contacts-app"
-  env: "ContactsApp-env"
+  app: "ebs-contacts-app"
+  env: "EbsContactsApp-env"
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key:
     secure: $AWS_SECRET
   bucket_name: "elasticbeanstalk-ap-southeast-1-035765131789"
-  bucket_path: "contacts-app"
+  bucket_path: "ebs-contacts-app"
   on:
     branch: master
 
