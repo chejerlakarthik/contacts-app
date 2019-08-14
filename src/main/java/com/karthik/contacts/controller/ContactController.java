@@ -37,19 +37,19 @@ public class ContactController {
 		return new ContactsResponse(contacts);
 	}
 	
-	@GetMapping(path = "/contacts/{name}")
-	public Contact getContact(@PathVariable String name)
+	@GetMapping(path = "/contacts/{id}")
+	public Contact getContact(@PathVariable String id)
 	{
-		return contactRepository.findByName(name)
+		return contactRepository.findById(id)
 								.orElseThrow(
 										() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found")
 								);
 	}
 
-	@PutMapping(path = "/contacts/{name}")
-	public Contact updateContact(@PathVariable String name, @RequestBody Contact contactToUpdate)
+	@PutMapping(path = "/contacts/{id}")
+	public Contact updateContact(@PathVariable String id, @RequestBody Contact contactToUpdate)
 	{
-		return contactRepository.findByName(name)
+		return contactRepository.findById(id)
 								.map(contact -> {
 									contact.setPersonalEmail(contactToUpdate.getPersonalEmail());
 									return contact;
@@ -66,10 +66,10 @@ public class ContactController {
 		contactRepository.deleteAll();
 	}
 
-	@DeleteMapping(path = "/contacts/{name}")
-	public void deleteContact(@PathVariable String name)
+	@DeleteMapping(path = "/contacts/{id}")
+	public void deleteContact(@PathVariable String id)
 	{
-		contactRepository.findByName(name)
+		contactRepository.findById(id)
 						 .ifPresent(contactRepository::delete);
 	}
 

@@ -56,7 +56,7 @@ public class ContactControllerTest {
     @Test
     void testFindingAnExistingContactIsSuccessful()
     {
-        when(contactRepository.findByName(any())).thenReturn(Optional.of(newContact));
+        when(contactRepository.findById(any())).thenReturn(Optional.of(newContact));
         Contact contactByName = contactsController.getContact("karthik");
         assertThat(contactByName.getName(), equalTo("karthik"));
         assertThat(contactByName.getPersonalEmail(), equalTo("karthik@gmail.com"));
@@ -65,7 +65,7 @@ public class ContactControllerTest {
     @Test
     void testFindingAnNonExistingContactThrowsAnException()
     {
-        when(contactRepository.findByName("invalid")).thenThrow(ResponseStatusException.class);
+        when(contactRepository.findById("invalid")).thenThrow(ResponseStatusException.class);
         assertThrows(ResponseStatusException.class, () -> contactsController.getContact("invalid"));
     }
 
@@ -74,10 +74,10 @@ public class ContactControllerTest {
     {
         Contact initial = new Contact("karthik", "chejerlakarthik@gmail.com");
         Contact updated = new Contact(initial.getId(),"karthik", "chejerlakarthik@icloud.com");
-        when(contactRepository.findByName(anyString())).thenReturn(Optional.of(initial));
+        when(contactRepository.findById(anyString())).thenReturn(Optional.of(initial));
         when(contactRepository.save(any())).thenReturn(updated);
 
-        Contact updatedContact = contactsController.updateContact("karthik", updated);
+        Contact updatedContact = contactsController.updateContact(initial.getId(), updated);
         assertThat(updatedContact, equalTo(updated));
         assertThat(updatedContact.getId(), equalTo(updated.getId()));
     }
@@ -88,7 +88,7 @@ public class ContactControllerTest {
         Contact contactToUpdate = new Contact("id","karthik", "chejerlakarthik@icloud.com");
 
         assertThrows(
-                ResponseStatusException.class, () -> contactsController.updateContact("karthik", contactToUpdate)
+                ResponseStatusException.class, () -> contactsController.updateContact("id", contactToUpdate)
         );
     }
 
@@ -96,11 +96,11 @@ public class ContactControllerTest {
     void testDeleteIsCalledWhenContactIsFound()
     {
         Contact karthikContact = new Contact("id","karthik", "chejerlakarthik@icloud.com");
-        when(contactRepository.findByName(anyString())).thenReturn(Optional.of(karthikContact));
+        when(contactRepository.findById(anyString())).thenReturn(Optional.of(karthikContact));
         doNothing().when(contactRepository).delete(karthikContact);
-        contactsController.deleteContact("karthik");
+        contactsController.deleteContact("id");
 
-        verify(contactRepository, times(1)).findByName(anyString());
+        verify(contactRepository, times(1)).findById(anyString());
         verify(contactRepository, times(1)).delete(any());
     }
 
@@ -108,11 +108,11 @@ public class ContactControllerTest {
     void testDeleteIsNotCalledWhenContactIsNotFound()
     {
         Contact karthikContact = new Contact("id","karthik", "chejerlakarthik@icloud.com");
-        when(contactRepository.findByName(anyString())).thenReturn(Optional.empty());
+        when(contactRepository.findById(anyString())).thenReturn(Optional.empty());
         doNothing().when(contactRepository).delete(karthikContact);
-        contactsController.deleteContact("karthik");
+        contactsController.deleteContact("id");
 
-        verify(contactRepository, times(1)).findByName(anyString());
+        verify(contactRepository, times(1)).findById(anyString());
         verify(contactRepository, times(0)).delete(any());
     }
 }
