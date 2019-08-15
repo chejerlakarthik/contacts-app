@@ -3,6 +3,8 @@ package com.karthik.contacts.controller;
 import com.karthik.contacts.model.Contact;
 import com.karthik.contacts.model.ContactsResponse;
 import com.karthik.contacts.repository.ContactRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ContactController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
 
 	private final ContactRepository contactRepository;
 
@@ -25,6 +29,7 @@ public class ContactController {
 				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public Contact addNewContact(@RequestBody Contact contactToAdd)
 	{
+		LOGGER.debug("Adding a new contact: " + contactToAdd);
 		Contact newContact = new Contact(contactToAdd.getName(), contactToAdd.getPersonalEmail());
 		return contactRepository.insert(newContact);
 	}
@@ -33,6 +38,7 @@ public class ContactController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ContactsResponse getAllContacts()
 	{
+		LOGGER.debug("Retrieving all contacts");
 		List<Contact> contacts = contactRepository.findAll();
 		return new ContactsResponse(contacts);
 	}
