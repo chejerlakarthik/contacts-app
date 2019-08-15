@@ -3,6 +3,8 @@ package com.karthik.contacts.controller;
 import com.karthik.contacts.model.Contact;
 import com.karthik.contacts.model.ContactsResponse;
 import com.karthik.contacts.repository.ContactRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ContactController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
 
 	private final ContactRepository contactRepository;
 
@@ -25,6 +29,7 @@ public class ContactController {
 				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public Contact addNewContact(@RequestBody Contact contactToAdd)
 	{
+		LOGGER.debug("Adding a new contact: " + contactToAdd);
 		Contact newContact = new Contact(contactToAdd.getName(), contactToAdd.getPersonalEmail());
 		return contactRepository.insert(newContact);
 	}
@@ -33,6 +38,7 @@ public class ContactController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ContactsResponse getAllContacts()
 	{
+		LOGGER.debug("Retrieving all contacts");
 		List<Contact> contacts = contactRepository.findAll();
 		return new ContactsResponse(contacts);
 	}
@@ -40,6 +46,7 @@ public class ContactController {
 	@GetMapping(path = "/contacts/{id}")
 	public Contact getContact(@PathVariable String id)
 	{
+		LOGGER.debug("Finding contact with id: " + id);
 		return contactRepository.findById(id)
 								.orElseThrow(
 										() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found")
@@ -49,6 +56,7 @@ public class ContactController {
 	@PutMapping(path = "/contacts/{id}")
 	public Contact updateContact(@PathVariable String id, @RequestBody Contact contactToUpdate)
 	{
+		LOGGER.debug("Attempting to update contact for id: " + id);
 		return contactRepository.findById(id)
 								.map(contact -> {
 									contact.setName(contactToUpdate.getName());
@@ -64,12 +72,14 @@ public class ContactController {
 	@DeleteMapping(path = "/contacts")
 	public void deleteAll()
 	{
+		LOGGER.info("Deleting all contacts");
 		contactRepository.deleteAll();
 	}
 
 	@DeleteMapping(path = "/contacts/{id}")
 	public void deleteContact(@PathVariable String id)
 	{
+		LOGGER.debug("Deleting contact with id: " + id);
 		contactRepository.findById(id)
 						 .ifPresent(contactRepository::delete);
 	}
