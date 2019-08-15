@@ -46,6 +46,7 @@ public class ContactController {
 	@GetMapping(path = "/contacts/{id}")
 	public Contact getContact(@PathVariable String id)
 	{
+		LOGGER.debug("Finding contact with id: " + id);
 		return contactRepository.findById(id)
 								.orElseThrow(
 										() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found")
@@ -55,6 +56,7 @@ public class ContactController {
 	@PutMapping(path = "/contacts/{id}")
 	public Contact updateContact(@PathVariable String id, @RequestBody Contact contactToUpdate)
 	{
+		LOGGER.debug("Attempting to update contact for id: " + id);
 		return contactRepository.findById(id)
 								.map(contact -> {
 									contact.setName(contactToUpdate.getName());
@@ -70,12 +72,14 @@ public class ContactController {
 	@DeleteMapping(path = "/contacts")
 	public void deleteAll()
 	{
+		LOGGER.info("Deleting all contacts");
 		contactRepository.deleteAll();
 	}
 
 	@DeleteMapping(path = "/contacts/{id}")
 	public void deleteContact(@PathVariable String id)
 	{
+		LOGGER.debug("Deleting contact with id: " + id);
 		contactRepository.findById(id)
 						 .ifPresent(contactRepository::delete);
 	}

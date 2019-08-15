@@ -2,6 +2,7 @@ package com.karthik.contacts.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -45,5 +46,12 @@ public class Contact {
 
 	public void setPersonalEmail(String personalEmail) {
 		this.personalEmail = personalEmail;
+	}
+
+	@Override
+	public String toString() {
+		return MessageFormat.format(
+				"Contact'{'id=''{0}'', name=''{1}'', personalEmail=''{2}'''}'", id, name, personalEmail
+		);
 	}
 }
