@@ -2,37 +2,24 @@ sudo: required
 language: java
 dist: trusty
 jdk: openjdk8
-
 services:
 - docker
-
-notifications:
-  slack:
-    rooms:
-      secure: bGXKUZPmebhlPqHmyrW42VLAjbgr2aNeMjiPK1GQDu/2Dg13cR0AuWbslHVWxg+4UgevU/pY4SVIYFJG/fGKP0IsVD/XRjnxTUcoDEVXFv4nyfKgvn806/4g3b/hIlyIzHN5m4WAJySx4RLaHcYDWilg5z0oEGugiOYIQ8yV7EQATZZXDSxQOpOXF3DNX5sZHqvstrVvttpfjcE0sL9BJR0vdDGYJL26VPZQGQ2VsNFjaFm1O91KP6RMszpSNQtpmUgSLpXWY6QV/HOkukki2GhttX0urp8hkE41BTLn71URf3pB+qLca5r8TJm6HWwJ9xh9YobxC07Ztmz4HChISVYr/TGZ6JcSFGSu79hHo9IrsKDnzI79xXLKXUwOg/cxUs1Vuj7Ie/5o9UsSI9m0uMKvvdSQ7kmnKVdQPvAXrQF30b8KmVXatjry8ehMr1RAV6Ui4AjTlis14U5V0JkILClhOzEzTyhw8n15Z/EFEV5jsOf2ivz9pjbTzJZhmvZZ9HNj0QinAb43ZkR7SC+vO04yAuf5AUFNnf31VRT/iC8kZZS128O6KuryET4EcG0GpyfjHH6eAz3NJ3MNEfjE3VEtdiKqufLHOZbQPHpAqsnGqC+NK8AOitGHcZy1/9NF6dalX/cZ8ZIpY25nVb8X2YdzidytNf0xRDSuZ/g8cOA=
-    on_success: always
-    on_failure: always
-
 before_install:
 - sudo apt-get update
 - sudo apt-get install python3
 - python3 --version
-
 env:
   global:
   - secure: iG6VRNo9Ka2Y4iPc9YsMSICoVDZQ8GAwE3vAXm7ojkOulay5FZLQtozYz/+TAcnPs30+zJyc8urMuy3fQo9CgaRMx6O2t7sV6qirOdwTNZyNToKNwILaLTPAh+z26PXMQPF13H4/EZmqPAkPyixuTr/r1aacX9Ud5Hj1HFZHlzCQ1oAk4LkNHCrzZUdDmct125kIWf3XQUQMHxMXnqUluKRkglq86L/Xj5Z1Nkvb5+CqaATvh1svobwfy7Rs5OCAVvbi4Q2s+lA0Gq4es5TfaUlXnUYNwMOqeJ1IMPJp4an8F0EliS1U7rsKsDlPaHjhD3107q+cHIosb+draC7BaDS4mBmdY4v5xgh8qb4UOkS/Lwy2f1GhxN8XEolXhS6pmRXyRWh0e9/ThngSl1E/Ugx3E8T/rlzr7SlCDNGjz5PgjPHTEE5ZEyQbbi64FPwfjR45/3lRON5335u4zG1MBzMW8vJOw/3TaVyDwOIypZwkNlDIa7oRo9igZ1viJnPPoGZrEQpd2U6G6iX8sdbEqwnwU7Yd9xoovrfn94LSsCpfC4Oxoh9gUNzJ05mC+DRnT84ILNaWJOiaOu28jHwRiwXtERUnjP2QoaKCrUZfHeZTzInI4H+hI2Mf/F8KjKv6mmdiydIOpXDm8VRURPcTzGxGIn4DFG8V3Mezhf9wDg4=
   - COMMIT=${TRAVIS_COMMIT::7}
-
 addons:
   sonarcloud:
     organization: chejerlakarthik-github
     token:
       secure: "$SONAR_TOKEN"
-
 script:
 - "./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=chejerlakarthik_contacts-app"
 - "./mvnw clean package"
-
 after_success:
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH;
   fi`
@@ -41,11 +28,9 @@ after_success:
 - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
 - docker login -u $DOCKER_USER -p $DOCKER_PASS
 - docker push $IMAGE_NAME:$TAG
-
 before_deploy:
 - python3 generateConfig.py MONGO_USER=$MONGO_USER,MONGO_PASSWORD=$MONGO_PASSWORD,SERVER_PORT=$LB_PORT
   $ZIPFILE_NAME
-
 deploy:
   provider: elasticbeanstalk
   skip_cleanup: true
@@ -60,3 +45,11 @@ deploy:
   bucket_path: ebs-contacts-app
   on:
     branch: master
+notifications:
+  email:
+    - chejerlakarthik@gmail.com
+  slack:
+    rooms:
+      secure: q0Y9jUNA6wIy4Fm/7J0oiuGWcRrB8DBCLKLzfIaWsp7iW8MQRbcybb5jTPXW2ubKg5W8gf7/cj/epWpWB+F/SoBqhj8zxu3gU09Daltiswx2rhFqhfGD5r1az5X+ql9IupGCVdH67cvs48+DV/ArzMXBLy3dYhQ68MKj1aV1iIHqbk17g9NhMyZqMLsPPkOcZ7LybhrAnfwPjSbMP9NeUMbFh6nexpbm0U1d8f/EO9xtdgN1qhyuPJa0QPlPjQu0l587djia+d9fRsj8s+yTnS1Z5u4m9wlI4ZcI4EOV5+WhHV3ZokWmzWohEJZKjBtMtXhuvyE0RvGphJGR2mlsnLIJpWUnOixVzWZOgvMtrNzaWZ665d7f9tUL2vbfK+2JJxyKuq0TbiRB7d8rhqQfCiZjdLDA6T3NlAvOvQ+FD1FV1SUFbQPJq8XY8/mTrKwuBbq/nBCyEbAC+peKDCk0+NCZV5nwgVzXVXLQ1bda75chvxlFM3+BZGbQGgCtPSncpDDYPjX81zpTLPyLWXu9qCAULtPoTyZboZtVhEOiLKrVMvQtSHKSRWVEtRb2eGacDzbT75TfdRWpQMWTcd9v7mB/6VQ5fxsJIghAtlPVP2r9k4oyQTnRoMIBElF0f73LkjCUvblP5nz5obui8NOB2JRmMNvIW7q5F1Jt9temfug=
+    on_success: change # default: always
+    on_failure: always # default: always
