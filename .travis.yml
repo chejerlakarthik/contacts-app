@@ -2,66 +2,54 @@ sudo: required
 language: java
 dist: trusty
 jdk: openjdk8
-
 services:
 - docker
-
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install python3
-  - python3 --version
-
+- sudo apt-get update
+- sudo apt-get install python3
+- python3 --version
 env:
   global:
-    - secure: iG6VRNo9Ka2Y4iPc9YsMSICoVDZQ8GAwE3vAXm7ojkOulay5FZLQtozYz/+TAcnPs30+zJyc8urMuy3fQo9CgaRMx6O2t7sV6qirOdwTNZyNToKNwILaLTPAh+z26PXMQPF13H4/EZmqPAkPyixuTr/r1aacX9Ud5Hj1HFZHlzCQ1oAk4LkNHCrzZUdDmct125kIWf3XQUQMHxMXnqUluKRkglq86L/Xj5Z1Nkvb5+CqaATvh1svobwfy7Rs5OCAVvbi4Q2s+lA0Gq4es5TfaUlXnUYNwMOqeJ1IMPJp4an8F0EliS1U7rsKsDlPaHjhD3107q+cHIosb+draC7BaDS4mBmdY4v5xgh8qb4UOkS/Lwy2f1GhxN8XEolXhS6pmRXyRWh0e9/ThngSl1E/Ugx3E8T/rlzr7SlCDNGjz5PgjPHTEE5ZEyQbbi64FPwfjR45/3lRON5335u4zG1MBzMW8vJOw/3TaVyDwOIypZwkNlDIa7oRo9igZ1viJnPPoGZrEQpd2U6G6iX8sdbEqwnwU7Yd9xoovrfn94LSsCpfC4Oxoh9gUNzJ05mC+DRnT84ILNaWJOiaOu28jHwRiwXtERUnjP2QoaKCrUZfHeZTzInI4H+hI2Mf/F8KjKv6mmdiydIOpXDm8VRURPcTzGxGIn4DFG8V3Mezhf9wDg4=
-    - COMMIT=${TRAVIS_COMMIT::7}
-
+  - secure: iG6VRNo9Ka2Y4iPc9YsMSICoVDZQ8GAwE3vAXm7ojkOulay5FZLQtozYz/+TAcnPs30+zJyc8urMuy3fQo9CgaRMx6O2t7sV6qirOdwTNZyNToKNwILaLTPAh+z26PXMQPF13H4/EZmqPAkPyixuTr/r1aacX9Ud5Hj1HFZHlzCQ1oAk4LkNHCrzZUdDmct125kIWf3XQUQMHxMXnqUluKRkglq86L/Xj5Z1Nkvb5+CqaATvh1svobwfy7Rs5OCAVvbi4Q2s+lA0Gq4es5TfaUlXnUYNwMOqeJ1IMPJp4an8F0EliS1U7rsKsDlPaHjhD3107q+cHIosb+draC7BaDS4mBmdY4v5xgh8qb4UOkS/Lwy2f1GhxN8XEolXhS6pmRXyRWh0e9/ThngSl1E/Ugx3E8T/rlzr7SlCDNGjz5PgjPHTEE5ZEyQbbi64FPwfjR45/3lRON5335u4zG1MBzMW8vJOw/3TaVyDwOIypZwkNlDIa7oRo9igZ1viJnPPoGZrEQpd2U6G6iX8sdbEqwnwU7Yd9xoovrfn94LSsCpfC4Oxoh9gUNzJ05mC+DRnT84ILNaWJOiaOu28jHwRiwXtERUnjP2QoaKCrUZfHeZTzInI4H+hI2Mf/F8KjKv6mmdiydIOpXDm8VRURPcTzGxGIn4DFG8V3Mezhf9wDg4=
+  - COMMIT=${TRAVIS_COMMIT::7}
 addons:
   sonarcloud:
     organization: chejerlakarthik-github
     token:
-      secure: $SONAR_TOKEN
-
+      secure: "$SONAR_TOKEN"
 script:
-# the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-- ./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=chejerlakarthik_contacts-app
-- ./mvnw clean package
-
+- "./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=chejerlakarthik_contacts-app"
+- "./mvnw clean package"
 after_success:
-- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH;
+  fi`
 - export IMAGE_NAME=chejerlakarthik/contacts-app
 - docker build -t $IMAGE_NAME:$COMMIT .
 - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
 - docker login -u $DOCKER_USER -p $DOCKER_PASS
 - docker push $IMAGE_NAME:$TAG
-
 before_deploy:
-- python3 generateConfig.py MONGO_USER=$MONGO_USER,MONGO_PASSWORD=$MONGO_PASSWORD,SERVER_PORT=$LB_PORT $ZIPFILE_NAME
-
+- python3 generateConfig.py MONGO_USER=$MONGO_USER,MONGO_PASSWORD=$MONGO_PASSWORD,SERVER_PORT=$LB_PORT
+  $ZIPFILE_NAME
 deploy:
   provider: elasticbeanstalk
-#  To prevent Travis CI from removing any previous built artifacts
   skip_cleanup: true
-  zip_file: $ZIPFILE_NAME
-  region: "ap-southeast-1"
-  app: "ebs-contacts-app"
-  env: "EbsContactsApp-env"
-  access_key_id: $AWS_ACCESS_KEY
+  zip_file: "$ZIPFILE_NAME"
+  region: ap-southeast-1
+  app: ebs-contacts-app
+  env: EbsContactsApp-env
+  access_key_id: "$AWS_ACCESS_KEY"
   secret_access_key:
-    secure: $AWS_SECRET
-  bucket_name: "elasticbeanstalk-ap-southeast-1-035765131789"
-  bucket_path: "ebs-contacts-app"
+    secure: "$AWS_SECRET"
+  bucket_name: elasticbeanstalk-ap-southeast-1-035765131789
+  bucket_path: ebs-contacts-app
   on:
     branch: master
-
-#notifications:
-#  email: false
-#  slack:
-#    rooms:
-#      secure: C7QRJ6cMu5ZWr0rotlwHTtE5kXVw5vixnhp94ZdJuyc7UGT2AxTqLfsGIV2nVHcXt+Uyd4zKYdaHCCPrEM+TKeGwRkX+DWBsLOkpBN88Tb4P2KpTfdfZr7p7z7J+Jh6sDEeYT6A+V+kZpTMcuLUCN65cW20UGXZqgwjq7c8EAJeB16uqWoayxwT78Ln1nXkqGvbzWLp51lstXExaUEJQw753ci45/FMcF9cCr8KrWMjBHM4HOrymPATBeNe6TJtDUndpNmtUu/8/aNH8l06fVqpEnr1P3si2wJPxsF+ZzSLAnQwQZ5y7Jxupn1TCaEQty0d7zzNMhBCqfePlpWJEXBym2NNvl+5mrIx3K99ztx/AXRny3vvD/avSwZ35jM4eFzVd7M7eHykuNn5OIdkyWgsF+xHeu2O7CiqnIjCpmlEnNd92cZ6SSb6Y5y4URBzdqXJ+bLfYChRoDorl1aq8L6suPnfqZiqxg6n6Qpzp08gaOX/Vok/O1h5bfK87gFAz/9IJxU2uYMzxXy98DOvi7et0Teyz/affkM0QJQClNdF/z3AUVSec/0ISUqudDId0pAwZ1caxvAFVquNchKNiMGB+DPZMySrMBEDJEAKtAT2scsxOv7btm9CdtkZItfYgl6WZ0C+aAUdywqKwSqqIeieu/nHwXmJJulw6oj8sR2s=
-#    on_success: always
-#    on_failure: always
-#    template:
-#      - "Repo `%{repository_slug}` *%{result}* build (<%{build_url}|#%{build_number}>) for commit (<%{compare_url}|%{commit}>) on branch `%{branch}`."
-#      - "Execution time: *%{duration}*"
-#      - "Message: %{message}"
+notifications:
+  slack:
+    secure: bGXKUZPmebhlPqHmyrW42VLAjbgr2aNeMjiPK1GQDu/2Dg13cR0AuWbslHVWxg+4UgevU/pY4SVIYFJG/fGKP0IsVD/XRjnxTUcoDEVXFv4nyfKgvn806/4g3b/hIlyIzHN5m4WAJySx4RLaHcYDWilg5z0oEGugiOYIQ8yV7EQATZZXDSxQOpOXF3DNX5sZHqvstrVvttpfjcE0sL9BJR0vdDGYJL26VPZQGQ2VsNFjaFm1O91KP6RMszpSNQtpmUgSLpXWY6QV/HOkukki2GhttX0urp8hkE41BTLn71URf3pB+qLca5r8TJm6HWwJ9xh9YobxC07Ztmz4HChISVYr/TGZ6JcSFGSu79hHo9IrsKDnzI79xXLKXUwOg/cxUs1Vuj7Ie/5o9UsSI9m0uMKvvdSQ7kmnKVdQPvAXrQF30b8KmVXatjry8ehMr1RAV6Ui4AjTlis14U5V0JkILClhOzEzTyhw8n15Z/EFEV5jsOf2ivz9pjbTzJZhmvZZ9HNj0QinAb43ZkR7SC+vO04yAuf5AUFNnf31VRT/iC8kZZS128O6KuryET4EcG0GpyfjHH6eAz3NJ3MNEfjE3VEtdiKqufLHOZbQPHpAqsnGqC+NK8AOitGHcZy1/9NF6dalX/cZ8ZIpY25nVb8X2YdzidytNf0xRDSuZ/g8cOA=
+    on_success: always
+    on_failure: always
+    template:
+      - "%{repository_slug} (%{commit}) : %{message}"
+      - "Build details: %{build_url}"
