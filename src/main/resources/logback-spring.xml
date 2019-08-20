@@ -1,24 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
-
-    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
-    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
-    <root level="INFO">
-        <appender-ref ref="FILE" />
-    </root>
-
-    <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-    </appender>
-
     <!--  Configure log level for our application code  -->
-    <logger name="com.karthik" level="debug" additivity="false">
-        <appender-ref ref="jsonConsoleAppender" />
-    </logger>
-
+    <logger name="com.karthik" level="debug"/>
     <!--    To log every request -->
-    <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="debug" additivity="false">
-        <appender-ref ref="jsonConsoleAppender" />
-    </logger>
+    <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="debug"/>
 </configuration>
