@@ -8,3 +8,5 @@ target/
 run.sh
 .ebextensions/
 *.zip
+/build/
+/.gradle/
