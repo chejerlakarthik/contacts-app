@@ -23,7 +23,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew clean build sonarqube -Dsonar.login=$SONAR_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Build and push Docker images
         uses: docker/build-push-action@v1.1.0
         with:
@@ -31,10 +34,3 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: chejerlakarthik/contacts-app
           tags: latest
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v1.2
-        with:
-          projectBaseDir: .
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
